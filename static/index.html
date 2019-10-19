@@ -1,0 +1,92 @@
+<html>
+    <head></head>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <body>
+        <div class="block-text" style="border: solid 5px #3498DB;">
+        <h2 style="color: #3498DB;">Мини-игра с хешами</h2>
+
+            <big>Ваша задача найти такой Nonce, чтобы хеш начинался с 00</big><br>
+
+        <big>Вводите любые символы пока не получите 00:</big><br>
+
+        <style>
+            .hash-game {
+                width: 100%;
+                max-width: 780px;
+                margin: 50px auto 0;
+                overflow: hidden;
+                padding: 40px 0;
+                font-size: 120%;
+                color: #3498DB;
+                font-weight: bold;
+                font-family: Ubuntu, Helvetica, Arial, sans-serif;
+            }
+
+                .hash-game__nonce {
+                    width: 100%;
+                    margin-bottom: 20px;
+                }
+                    #hash_input {
+                        min-width: 50%;
+                        border: solid 2px #999;
+                    }
+
+                .hash-game__attempts {
+                    width: 100%;
+                    margin-bottom: 20px;
+                }
+
+                .hash-game__result {
+                    width: 100%;
+                    margin-bottom: 20px;
+                }
+
+                    #hash_output {
+                        font-size: 20px;
+                        color: #E74C3C;
+                    }
+
+                .success {
+                    color: #27AE60 !important;
+                }
+        </style>
+
+        <div class="hash-game">
+            <div class="hash-game__nonce">Nonce:&nbsp;<input class="text" id="hash_input" value="ШП"></div>
+            <div class="hash-game__result">Хеш:&nbsp;<span id="hash_output">f0afe84aa097f6fce31c0b76695ddb1fb980c7522f22482c0ac8e59f8a7e8065</span></div>
+            <div class="hash-game__attempts"><span id="hash_attempts">Попыток: 0</span></div>
+        </div>
+
+</div>
+    </body>
+
+
+<script src="https://rawgit.com/emn178/js-sha256/master/build/sha256.min.js"></script>
+
+<script>
+    $(function() {
+        var game_over = false;
+        var attempts = 0;
+        var $hash_input = $("#hash_input");
+        var $hash_output = $("#hash_output");
+        var $hash_attempts = $("#hash_attempts");
+        $hash_input.bind("keyup", function(e) {
+            if (game_over) return;
+
+            var new_hash_input = $hash_input.val();
+            if (new_hash_input.length >= 1) {
+                var new_hash_output = sha256(new_hash_input);
+                $hash_output.html(new_hash_output);
+                attempts = attempts + 1;
+                $hash_attempts.html("Попытка: " + attempts);
+                if (new_hash_output[0] == "0" && new_hash_output[1] == "0") {
+                    game_over = true;
+                    $hash_output.addClass("success");
+                    $hash_attempts.addClass("success");
+                    $hash_attempts.html("Ушло попыток: " + attempts);
+                }
+            }
+        });
+    });
+</script>
+</html>
